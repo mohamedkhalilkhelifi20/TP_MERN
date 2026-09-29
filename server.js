@@ -56,6 +56,57 @@ app.post('/api/articles', (req ,res)=> {
     res . status (201) . json ({ message : 'Article créé', article : nouvelArticle }) ;
 }) ;
 
+// Exercice 1
+// 1. GET /about
+
+app.get('/about',(req,res)=>{
+    res.json({ application: 'MERN', auteur: 'Ali', version: '1.5.0' });
+})
+
+//2. GET /api/users
+
+const users = [
+    { id: 1, name: 'Khalil',     email: 'Khalil@gmail.com' },
+    { id: 2, name: 'ALI', email: 'ALI@gmail.com' },
+    { id: 3, name: 'Mohamed',    email: 'Mohamed@gmail.com' }
+];
+
+app.get('/api/users', (req, res) => {
+    const { name } = req.query;   // = const name = req.query.name;
+
+    let resultat = users;
+    if (name) {
+        resultat = users.filter(a => a.name === name);
+    }
+    res.json({ users: resultat });
+});
+
+
+app.get('/api/users', (req, res) => {
+    res.json({  users: users });
+});
+
+// 3. GET /api/users/:id
+
+app.get('/api/users/:id',(req,res)=> {
+    const id = Number ( req.params.id) ;
+    const user = users . find (a=> a.id === id) ;
+    if (! user ) {
+        return res.status (404).json({ error : `User ${id} introuvable` }) ;
+    }
+    res.json ( user ) ;
+}) ;
+
+
+//4. POST /contact
+app.post('/contact',(req,res)=>{
+    const {email,message} = req.body;
+    if(!email || !message){
+        return res.status(400).json({error: 'Les champs email et message sont obligatoires'})
+    }
+    res.status(200).json({ message: 'Merci, votre message a bien été reçu' });
+})
+
 
 // 4. démarrer le serveur : il attend les requêtes sur le port 3000
 app.listen(PORT, () => {

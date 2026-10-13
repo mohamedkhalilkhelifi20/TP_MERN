@@ -1,9 +1,12 @@
 const express = require('express');   // 1. charger la bibliothèque Express
 const articleRoutes = require('./routes/articleRoutes');
 const userRoutes = require('./routes/userRoutes')
+const dotenv = require('dotenv');
+const connectDB = require('./config/db');
 
-const app = express();                // 2. créer l'application : c'est notre serveur
-const PORT = 3000;
+dotenv . config () ;
+const app = express () ;
+const PORT = process . env. PORT || 3000;
 
 app.use(express.json());   // lit le corps JSON et le range dans req.body
 
@@ -12,14 +15,17 @@ app.use(express.json());   // lit le corps JSON et le range dans req.body
 app.use('/api/articles', articleRoutes);
 app.use('/api/users', userRoutes);
 
-// Route d'accueil pour tester le statut général du serveur
-app.get('/', (req, res) => {
-    res.json({ message: "API du Blog- Serveur Modulaire Opérationnel (SoC)" });
-});
+(
+    async () => {
+        try {
+            await connectDB(process.env.MONGODB_URI);
+            app.listen(PORT, () => {
+                console.log(`Serveur MERN en ecoute sur http://localhost:${PORT}`);
+            });
+        } catch (err) {
+            console.error('Erreur critique de demarrage du serveur :', err.message);
+            process.exit(1);
+        }
+})();
 
-
-// 4. démarrer le serveur : il attend les requêtes sur le port 3000
-app.listen(PORT, () => {
-    console.log(`Serveur disponible sur http://localhost:${PORT}`);
-});
 

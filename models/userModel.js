@@ -13,11 +13,12 @@ const userSchema = new mongoose.Schema(
             unique: true,
             lowercase: true,
             trim: true,
-            match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Format d'email invalide (ex: aya@polytechnique.tn)"]
+            match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Format d'email invalide"]
         },
-        age: {
-            type: Number,
-            min: [4, "L'age minimum autorise est de 4 ans"]
+        password: {
+            type: String,
+            required: [true, 'Le mot de passe est obligatoire'],
+            minlength: [6, 'Le mot de passe doit comporter au moins 6 caracteres']
         },
         role: {
             type: String,
@@ -27,16 +28,10 @@ const userSchema = new mongoose.Schema(
             },
             default: 'user'
         },
-
-        bio: {
-            type: String,
-            maxlength: [200, 'La biographie ne peut pas depasser 200 caracteres']
-        },
-        phone: {
-            type: String,
-            match: [/^\d{8}$/, 'Numero de 8 chiffres requis']
+        age: {
+            type: Number,
+            min: [4, "L'age minimum autorise est de 4 ans"]
         }
-
     },
     { timestamps: true }
 );
